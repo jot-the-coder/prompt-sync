@@ -144,11 +144,17 @@ function create(config) {
         process.stdout.write('^C\n');
         fs.closeSync(fd);
 
-        if (sigint) process.exit(130);
+        let sigint_ret;
+        if (sigint) {
+          if (typeof sigint === 'string')
+            sigint_ret = sigint;
+          else
+            process.exit(130);
+        }
 
         process.stdin.setRawMode(wasRaw);
 
-        return null;
+        return sigint_ret;
       }
 
       // catch the terminating character
